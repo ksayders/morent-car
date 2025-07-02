@@ -4,13 +4,21 @@ import iconFavoriteUrl from './icons/favorite.svg';
 import iconNotificationUrl from './icons/notification.svg';
 import iconSettingUrl from './icons/setting.svg';
 import iconUserPhotoUrl from './icons/userPhoto.svg';
-import styles from './Header.module.scss'
 import {Box, Button, TextField,} from "@mui/material";
 
 function Header() {
     return (
-        <Box className={styles['header-container']}>
-            <Box className={styles['left-container']}>
+        <Box sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            padding: '40px 60px',
+            alignItems: 'center',
+            borderBottom: '1px solid #1b7297'
+        }}>
+            <Box sx={{
+                display: 'flex',
+                alignItems: 'center',
+            }}>
                 <Button sx={{fontSize: 32}}>MORENT</Button>
                 <Box sx={{
                     ml: '64px',

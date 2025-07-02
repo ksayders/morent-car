@@ -1,12 +1,12 @@
 import {Box, Button, Card, CardContent, Typography} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useState} from "react";
-import Car from './icons/car.svg'
 import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
 import AdjustIcon from '@mui/icons-material/Adjust';
 import PeopleIcon from '@mui/icons-material/People';
+import type {CardType} from "./types/card-types.ts";
 
-function CardItem() {
+function CardItem({name, info, fuel, type, people, imageUrl, price}: CardType) {
     const [favorite, setFavorite] = useState(false);
 
     const onFavorite = () => {
@@ -37,24 +37,37 @@ function CardItem() {
                         display: "flex",
                         flexDirection: "column",
                     }}>
-                        <Typography variant='body1' sx={{color: '#1A202C', fontSize: '20px'}}>Koenigsegg</Typography>
-                        <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>Sport</Typography>
+                        <Typography variant='body1' sx={{color: '#1A202C', fontSize: '20px'}}>{name}</Typography>
+                        <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{info}</Typography>
                     </Box>
                     <Button sx={{color: favorite ? 'red' : 'black'}} onClick={onFavorite}><FavoriteIcon/></Button>
                 </Box>
-                <Box>
-                    <img src={Car} alt="car"/>
+                <Box
+                    sx={{
+                        boxShadow: '0 5px 1px #90A3BF',
+                        borderRadius: '20px',
+                        overflow: 'hidden',
+                    }}
+                >
+                    <img
+                        src={imageUrl}
+                        alt={name}
+                        style={{
+                            width: '100%',
+                            display: 'block',
+                        }}
+                    />
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
                     <LocalGasStationIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>90L</Typography>
+                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{fuel}</Typography>
                     <AdjustIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>Manual</Typography>
+                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{type}</Typography>
                     <PeopleIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>2 people</Typography>
+                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{people}</Typography>
                 </Box>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-                    <Typography variant='body1'>$99.00/day</Typography>
+                    <Typography variant='body1'>${price}/day</Typography>
                     <Button variant='contained'>Rent Now</Button>
                 </Box>
             </CardContent>
