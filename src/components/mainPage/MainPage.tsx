@@ -1,11 +1,14 @@
 import Header from "./header/Header";
-import Main from "./main/Main.tsx";
+import Main from "./main/Main";
+import {useState} from "react";
 
 function MainPage() {
+    const [searchQuery, setSearchQuery] = useState('');
+
     return (
         <>
-            <Header/>
-            <Main/>
+            <Header onSearch={setSearchQuery}/>
+            <Main searchQuery={searchQuery}/>
         </>
     )
 }

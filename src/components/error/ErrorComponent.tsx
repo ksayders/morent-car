@@ -1,7 +1,7 @@
 import {Box, Typography} from '@mui/material';
 import WarningIcon from '@mui/icons-material/Warning';
 
-function LoadingComponent() {
+function ErrorComponent() {
     return (
         <Box sx={{
             width: "100%",
@@ -11,9 +11,9 @@ function LoadingComponent() {
             justifyContent: "center",
         }}>
             <WarningIcon/>
-            <Typography variant='h3' sx={{color: 'red'}}>Error...</Typography>
+            <Typography variant='h3' sx={{color: 'red'}}>Not found</Typography>
         </Box>
     )
 }
 
-export default LoadingComponent;
+export default ErrorComponent;

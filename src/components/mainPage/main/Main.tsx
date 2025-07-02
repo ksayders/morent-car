@@ -1,23 +1,14 @@
 import CardItem from "./card/CardItem";
 import {Box} from "@mui/material";
-import {useFetchCarItems} from "../../../fetchs/useFetchCarItems";
 import LoadingComponent from "../../loading/LoadingComponent";
 import ErrorComponent from "../../error/ErrorComponent";
+import {useGetCarsQuery} from "../../../store/carApi/carApi";
 
-function Main() {
-    const {data: cartItems, loading, error} = useFetchCarItems();
+function Main({searchQuery}: {searchQuery: string}) {
+    const {data: cartItems = [], isLoading, error} = useGetCarsQuery(searchQuery);
 
-    if (loading) {
-        return (
-            <LoadingComponent/>
-        )
-    }
-
-    if (error) {
-        return (
-            <ErrorComponent/>
-        )
-    }
+    if (isLoading) return <LoadingComponent/>
+    if (error) return <ErrorComponent/>
 
     return (
         <Box sx={{
