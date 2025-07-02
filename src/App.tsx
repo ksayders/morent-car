@@ -1,6 +1,11 @@
+import MainPage from './components/mainPage/MainPage'
+import './index.scss';
+
 function App() {
   return (
-      <>123</>
+      <>
+        <MainPage/>
+      </>
   )
 }
 
