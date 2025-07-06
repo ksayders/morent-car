@@ -1,4 +1,5 @@
 export interface CardType {
+    id: string;
     name: string;
     info: string;
     fuel: string;

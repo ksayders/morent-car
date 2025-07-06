@@ -1,16 +1,57 @@
 import {Box, Button, Card, CardContent, Typography} from "@mui/material";
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import {useState} from "react";
-import LocalGasStationIcon from '@mui/icons-material/LocalGasStation';
-import AdjustIcon from '@mui/icons-material/Adjust';
-import PeopleIcon from '@mui/icons-material/People';
-import type {CardType} from "./types/card-types.ts";
+import type {CardType} from "./types/card-types";
+import {useEffect, useState} from "react";
+import {useGetFavoriteCarsQuery, useAddFavoriteMutation, useDeleteFavoriteMutation} from "../../../../store/carFavoriteApi/carApiFavorites";
+import CarAttributes from "./carAttributes/CarAttributes.tsx";
+import CarImage from "./carImage/CarImage.tsx";
+import {useNavigate} from "react-router-dom";
+import {setSelectedCar} from "../../../../store/selectedCarSlice/selectedCarSlice";
+import {useDispatch} from "react-redux";
 
-function CardItem({name, info, fuel, type, people, imageUrl, price}: CardType) {
-    const [favorite, setFavorite] = useState(false);
+function CardItem(props: CardType) {
+    const {name, info, fuel, type, people, imageUrl, price} = props;
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const onFavorite = () => {
-        setFavorite(prev => !prev);
+    const {data: favorites = []} = useGetFavoriteCarsQuery();
+    const [addFavorite] = useAddFavoriteMutation();
+    const [deleteFavorite] = useDeleteFavoriteMutation();
+
+    const isFavorite = favorites.some((fav) =>
+        fav.name === name && fav.imageUrl === imageUrl
+    );
+
+    const [optimisticFavorite, setOptimisticFavorite] = useState(isFavorite);
+
+    useEffect(() => {
+        setOptimisticFavorite(isFavorite);
+    }, [isFavorite]);
+
+    const onPathToRent = () => {
+        dispatch(setSelectedCar(props))
+        navigate(`/rent-now`, {state: props});
+    }
+
+    const onFavorite = async () => {
+        const newState = !optimisticFavorite;
+        setOptimisticFavorite(newState);
+
+        try {
+            if (newState) {
+                await addFavorite(props);
+            } else {
+                const itemToDelete = favorites.find(fav =>
+                    fav.name === name && fav.imageUrl === imageUrl
+                );
+                if (itemToDelete) {
+                    await deleteFavorite(itemToDelete.id);
+                }
+            }
+        } catch (error) {
+            console.error('Failed to change favorite', error);
+            setOptimisticFavorite(prev => !prev);
+        }
     }
 
     return (
@@ -33,42 +74,17 @@ function CardItem({name, info, fuel, type, people, imageUrl, price}: CardType) {
                 p: '26px'
             }}>
                 <Box sx={{display: "flex", justifyContent: "space-between"}}>
-                    <Box sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                    }}>
+                    <Box sx={{display: "flex", flexDirection: "column",}}>
                         <Typography variant='body1' sx={{color: '#1A202C', fontSize: '20px'}}>{name}</Typography>
                         <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{info}</Typography>
                     </Box>
-                    <Button sx={{color: favorite ? 'red' : 'black'}} onClick={onFavorite}><FavoriteIcon/></Button>
+                    <Button sx={{color: optimisticFavorite ? 'red' : 'black'}} onClick={onFavorite}><FavoriteIcon/></Button>
                 </Box>
-                <Box
-                    sx={{
-                        boxShadow: '0 5px 1px #90A3BF',
-                        borderRadius: '20px',
-                        overflow: 'hidden',
-                    }}
-                >
-                    <img
-                        src={imageUrl}
-                        alt={name}
-                        style={{
-                            width: '100%',
-                            display: 'block',
-                        }}
-                    />
-                </Box>
-                <Box sx={{display: 'flex', justifyContent: 'space-around', alignItems: 'center'}}>
-                    <LocalGasStationIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{fuel}</Typography>
-                    <AdjustIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{type}</Typography>
-                    <PeopleIcon sx={{color: '#90A3BF'}}/>
-                    <Typography variant='body2' sx={{color: '#90A3BF', fontSize: '14px'}}>{people}</Typography>
-                </Box>
+                <CarImage imageUrl={imageUrl} name={name} />
+                <CarAttributes fuel={fuel} type={type} people={people}/>
                 <Box sx={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                     <Typography variant='body1'>${price}/day</Typography>
-                    <Button variant='contained'>Rent Now</Button>
+                    <Button variant='contained' onClick={onPathToRent}>Rent Now</Button>
                 </Box>
             </CardContent>
         </Card>

@@ -19,10 +19,10 @@ function Main({searchQuery}: {searchQuery: string}) {
             margin: "20px auto 0 auto",
             padding: "0 64px",
         }}>
-            {cartItems.map((obj, id) => (
+            {cartItems.map((items) => (
                 <CardItem
-                    key={id}
-                    {...obj}
+                    key={items.id}
+                    {...items}
                 />
             ))}
         </Box>

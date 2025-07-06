@@ -1,6 +1,6 @@
 import {Box, Button} from "@mui/material";
 import HeaderRight from "./headerRight/HeaderRight";
-import HeaderSearch from "./headerSearch/HeaderSearch.tsx";
+import HeaderSearch from "./headerSearch/HeaderSearch";
 import type {HeaderPropsTypes} from "./types/headerTypes";
 
 const Header = ({ onSearch }: HeaderPropsTypes) => {
@@ -10,7 +10,7 @@ const Header = ({ onSearch }: HeaderPropsTypes) => {
             justifyContent: 'space-between',
             padding: '40px 60px',
             alignItems: 'center',
-            borderBottom: '1px solid #1b7297'
+            borderBottom: '2px solid #1b7297'
         }}>
             <Box sx={{ display: 'flex', alignItems: 'center' }}>
                 <Button sx={{ fontSize: 32 }}>MORENT</Button>
